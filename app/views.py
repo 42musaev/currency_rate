@@ -15,6 +15,19 @@ def xml_to_dict(xml):
     return result
 
 
+def get_currency(f_date, b_date, c):
+    url = "http://www.cbr.ru/scripts/XML_dynamic.asp?"
+    f_date = datetime.strptime(f_date, "%Y-%m-%d").strftime("%d-%m-%Y"),
+    b_date = datetime.strptime(b_date, "%Y-%m-%d").strftime("%d-%m-%Y"),
+    params = {
+        'date_req1': f_date,
+        'date_req2': b_date,
+        'VAL_NM_RQ': c,
+    }
+    r = requests.get(url, params)
+    return r.text
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'GET':
@@ -25,17 +38,19 @@ def index():
         return render_template('app/index.html', currency=currency)
 
     elif request.method == 'POST':
-        date_req1 = request.form['date_req1']
-        date_req2 = request.form['date_req2']
-        currency = request.form['currency']
+        date_req1 = request.form.get('date_req1', False)
+        date_req2 = request.form.get('date_req2', False)
+        currency = request.form.get('currency', False)
+
         if date_req1 and date_req2 and currency:
-            url = "http://www.cbr.ru/scripts/XML_dynamic.asp?"
-            params = {
-                'date_req1': datetime.strptime(date_req1, "%Y-%m-%d").strftime("%d-%m-%Y"),
-                'date_req2': datetime.strptime(date_req2, "%Y-%m-%d").strftime("%d-%m-%Y"),
-                'VAL_NM_RQ': currency
+            xml = get_currency(date_req1, date_req2, currency)
+            data = xml_to_dict(xml)
+            return render_template('app/detail.html', data=data)
+
+        elif request.form.get('save', False):
+            return '200'
+        else:
+            errors = {
+                "error": "incorrect data entry"
             }
-            r = requests.get(url, params)
-            data = xml_to_dict(r.text)
-            return f"{data}"
-        return 200
+        return render_template('app/detail.html', errors=errors)
