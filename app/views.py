@@ -1,18 +1,10 @@
 from app import app
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
 import requests
 from datetime import datetime
-import xml.etree.ElementTree as ET
-
-
-def xml_to_dict(xml):
-    root = ET.fromstring(xml)
-    result = []
-    for record in root.findall('Record'):
-        date = record.get('Date')
-        value = record.find('Value').text
-        result.append({'date': date, 'value': value})
-    return result
+from app import cache
+from .utils import xml_to_dict
+from app.models import CurrencyRate
 
 
 def get_currency(f_date, b_date, c):
@@ -45,10 +37,15 @@ def index():
         if date_req1 and date_req2 and currency:
             xml = get_currency(date_req1, date_req2, currency)
             data = xml_to_dict(xml)
+            cache.set('data', data)
             return render_template('app/detail.html', data=data)
 
         elif request.form.get('save', False):
-            return '200'
+            data = cache.get('data')
+            if data:
+                return "200"
+            else:
+                return redirect(url_for('index'))
         else:
             errors = {
                 "error": "incorrect data entry"
