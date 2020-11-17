@@ -8,14 +8,26 @@
 <div class="container">
     <div class="col-8 mx-auto">
         <h3 class="mt-5">List</h3>
-          {% for value in currency %}
-          <ul class="list-group list-group-horizontal">
-              <li class="list-group-item">{{ value.currency.name }}</li>
-              <li class="list-group-item">{{ value.time_from.strftime('%d-%m-%Y') }}</li>
-              <li class="list-group-item">{{ value.time_before.strftime('%d-%m-%Y') }}</li>
-              <li class="list-group-item"><a href="{{ url_for('detail', currency_id=value.id) }}">view</a></li>
-          </ul>
-          {% endfor %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">name</th>
+              <th scope="col">date from</th>
+              <th scope="col">date before</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for value in currency %}
+              <tr>
+                  <td>{{ value.currency.name }}</td>
+                  <td>{{ value.time_from.strftime("%d-%m-%Y") }}</td>
+                  <td>{{ value.time_before.strftime("%d-%m-%Y") }}</td>
+                  <td><a href="{{ url_for('detail', currency_id=value.id) }}">view</a></td>
+              </tr>
+              {% endfor %}
+
+          </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}
