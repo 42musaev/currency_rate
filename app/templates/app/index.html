@@ -18,8 +18,8 @@
             <div class="form-group">
                 <label>Currency</label>
                 <select class="form-control" name="currency">
-                    {% for key, value in currency.items() %}
-                    <option value="{{ value }}">{{ key }}</option>
+                    {% for value in currency %}
+                    <option value="{{ value.code }}">{{ value.name }}</option>
                     {% endfor %}
                 </select>
             </div>
