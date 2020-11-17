@@ -9,10 +9,13 @@ class CurrencyRate(db.Model):
     time_before = db.Column(db.DateTime)
     created = db.Column(db.DateTime, default=datetime.now())
     currency_id = db.Column(db.Integer, db.ForeignKey('currency.id'))
-    currency = db.relationship("Currency")
+    currency = db.relationship("Currency", backref=db.backref("currency", uselist=False))
 
 
 class Currency(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(256))
     code = db.Column(db.String(256), unique=True)
+
+    def __repr__(self):
+        return self.name

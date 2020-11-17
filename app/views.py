@@ -67,7 +67,7 @@ def index():
             errors = {
                 "error": "incorrect data entry"
             }
-        return render_template('app/prev.html', errors=errors)
+        return render_template('app/index.html', errors=errors)
 
 
 @app.route('/list')
