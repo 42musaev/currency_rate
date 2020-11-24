@@ -25,6 +25,8 @@ def get_currency(f_date, b_date, c):
 def index():
     if request.method == 'GET':
         currency = Currency.query.all()
+        if not currency:
+            currency = [Currency(name='USD', code='R01235')]
         return render_template('app/index.html', currency=currency)
 
     elif request.method == 'POST':
