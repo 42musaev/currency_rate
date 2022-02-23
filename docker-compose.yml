@@ -3,7 +3,7 @@ version: "3.9"
 services:
   backend:
     build: .
-    command: bash -c "python3 manage.py db upgrade && python3 runner.py"
+    command: bash -c "python3 fixture.py && python3 manage.py db upgrade && python3 runner.py"
     volumes:
       - ./:/backend
     ports:
