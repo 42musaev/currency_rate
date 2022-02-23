@@ -1,5 +1,4 @@
 from app import manager
-from app.models import *
 
 
 if __name__ == '__main__':

@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  backend:
+    build: .
+    command: bash -c "python3 manage.py db upgrade && python3 runner.py"
+    volumes:
+      - ./:/backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      .env
+
+  db:
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    env_file:
+      .env
